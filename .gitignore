@@ -1,0 +1,7 @@
+/artifacts/
+
+/vendor/**
+!/vendor/vendor.json
+
+/jenigma.exe
+/jenigma

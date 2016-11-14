@@ -1,0 +1,85 @@
+variables:
+    GOPROJ_BASE: "github.com/RaveNoX" 
+    GOPROJ: "$GOPROJ_BASE/jenigma"
+    GOPATH: "$CI_PROJECT_DIR/.build"    
+
+stages:
+- test
+- build
+
+before_script:
+- export PATH="$GOPATH/bin:$PATH"
+- mkdir -p $GOPATH/src/$GOPROJ_BASE
+- ln -s $(pwd) $GOPATH/src/$GOPROJ
+- cd $GOPATH/src/$GOPROJ/
+- go get github.com/kardianos/govendor
+- govendor sync
+- mkdir -p artifacts
+
+after_script:
+- rm -rf $GOPATH/src/$GOPROJ
+
+cache:
+    key: "gopath_$CI_BUILD_REF"
+    paths:
+    - $GOPATH
+    - vendor/**
+
+format:
+    tags:
+    - docker
+    - linux
+    image: golang:latest
+    stage: test   
+    script:    
+    - go get golang.org/x/tools/cmd/goimports 
+    - goimports -l .
+    # If formatted is different than committed, exit with error    
+    - (if [ "$(goimports -l ./cmd)" == "" ]; then echo "Good format"; else echo "Bad format"; exit 33; fi);
+
+# test:
+#     tags:
+#     - docker
+#     - linux
+#     image: golang:latest
+#     stage: test        
+#     script:        
+#     - go test -cover -v -coverprofile="./artifacts/cover_cmd.out" ./
+#     - go tool cover -html="./artifacts/cover_cmd.out" -o "./artifacts/cover_cmd.htm"
+#     artifacts:
+#         paths:
+#         - artifacts/*
+    
+
+compile-linux:
+    tags:
+    - docker
+    - linux
+    image: golang:latest
+    stage: build
+    variables:
+        GOOS: linux
+        GOARCH: amd64    
+    script:
+    - mkdir -p artifacts        
+    - go build -o artifacts/jenigma .
+    artifacts:
+        paths:
+        - artifacts/*
+
+compile-windows:
+    tags:
+    - docker
+    - linux
+    image: golang:latest
+    stage: build
+    variables:
+        GOOS: windows
+        GOARCH: amd64    
+    script:
+    - mkdir -p artifacts
+    - go build -o artifacts/jenigma.exe .
+    artifacts:
+        paths:
+        - artifacts/*
+
