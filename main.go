@@ -1,12 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
-
-	"bytes"
 
 	"github.com/RaveNoX/jenigma/options"
 	"github.com/RaveNoX/jenigma/processor"
@@ -45,36 +43,33 @@ func main() {
 	}
 }
 
-func process(secret []byte) error {
-	var (
-		in  io.Reader
-		out io.Writer
-	)
-
-	if opts.In == "-" {
-		in = os.Stdin
-	} else {
-		f, err := os.Open(opts.In)
-		if err != nil {
-			return fmt.Errorf("Cannot open IN file: %v\n", err)
-		}
-		defer f.Close()
-		in = f
-	}
-
+func Saver(saveFn processor.SaveFunc) error {
 	if opts.DryRun {
-		out = new(bytes.Buffer)
-	} else {
-		f, err := os.Create(opts.Out)
-		if err != nil {
-			return fmt.Errorf("Cannot create OUT file: %v\n", err)
-		}
-		defer f.Close()
-		out = f
+		return saveFn(new(bytes.Buffer))
 	}
+
+	if opts.Out == "-" {
+		return saveFn(os.Stdout)
+	}
+
+	f, err := os.Create(opts.Out)
+	if err != nil {
+		return fmt.Errorf("Cannot create OUT file: %v\n", err)
+	}
+	defer f.Close()
+
+	return saveFn(f)
+}
+
+func process(secret []byte) error {
+	in, err := os.Open(opts.In)
+	if err != nil {
+		return fmt.Errorf("Cannot open IN file: %v\n", err)
+	}
+	defer in.Close()
 
 	if opts.Encrypt {
-		return processor.Encrypt(secret, os.Stderr, opts.Verbose, in, out)
+		return processor.Encrypt(secret, os.Stderr, opts.Verbose, in, Saver)
 	}
-	return processor.Decrypt(secret, os.Stderr, opts.Verbose, in, out)
+	return processor.Decrypt(secret, os.Stderr, opts.Verbose, in, Saver)
 }

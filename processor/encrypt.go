@@ -8,7 +8,7 @@ import (
 )
 
 // Encrypt encrypt JSON config values
-func Encrypt(secret []byte, log io.Writer, verbose bool, in io.Reader, out io.Writer) error {
+func Encrypt(secret []byte, log io.Writer, verbose bool, in io.Reader, saver Saver) error {
 	var (
 		err  error
 		hash string
@@ -47,18 +47,25 @@ func Encrypt(secret []byte, log io.Writer, verbose bool, in io.Reader, out io.Wr
 		fmt.Fprintln(log, "Writing header")
 	}
 
-	err = writeHeader(hash, out)
-	if err != nil {
-		return fmt.Errorf("Cannot write header: %v", err)
-	}
+	err = saver(func(out io.Writer) error {
+		err := writeHeader(hash, out)
+		if err != nil {
+			return fmt.Errorf("Cannot write header: %v", err)
+		}
 
-	if verbose {
-		fmt.Fprintln(log, "Writing JSON data")
-	}
+		if verbose {
+			fmt.Fprintln(log, "Writing JSON data")
+		}
 
-	err = writeJSON(data, out)
+		err = writeJSON(data, out)
+		if err != nil {
+			return fmt.Errorf("Cannot write JSON data: %v", err)
+		}
+
+		return err
+	})
 	if err != nil {
-		return fmt.Errorf("Cannot write JSON data: %v", err)
+		return err
 	}
 
 	if verbose {
