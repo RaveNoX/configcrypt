@@ -61,9 +61,9 @@ func Decrypt(secret []byte, log io.Writer, verbose bool, in io.Reader, saver Sav
 	if hash != decryptedHash {
 		return fmt.Errorf("Decrypted data hash not match hash from file")
 	}
-	fmt.Fprintln(log, "Hashes equal")
 
 	if verbose {
+		fmt.Fprintln(log, "Hashes equal")
 		fmt.Fprintln(log, "Writing JSON data")
 	}
 
