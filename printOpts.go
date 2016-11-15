@@ -19,9 +19,9 @@ func printOpts() {
 		out = "<STDOUT>"
 	}
 
-	fmt.Fprintln(os.Stderr, "Mode: ", mode)
-	fmt.Fprintln(os.Stderr, "In: ", opts.In)
-	fmt.Fprintln(os.Stderr, "Out: ", out)
-	fmt.Fprintln(os.Stderr, "Dry run: ", opts.DryRun)
+	fmt.Fprintln(os.Stderr, "Mode:", mode)
+	fmt.Fprintln(os.Stderr, "In:", opts.In)
+	fmt.Fprintln(os.Stderr, "Out:", out)
+	fmt.Fprintln(os.Stderr, "Dry run:", opts.DryRun)
 	fmt.Fprintln(os.Stderr)
 }
