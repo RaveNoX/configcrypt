@@ -26,7 +26,7 @@ func readSecret(env string) (string, error) {
 	}
 
 	if s == "" {
-		err = fmt.Errorf("Got enpty secret")
+		err = fmt.Errorf("Got empty secret")
 	}
 
 	return s, err
