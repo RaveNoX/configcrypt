@@ -36,19 +36,6 @@ format:
     - goimports -l .
     # If formatted is different than committed, exit with error    
     - (if [ "$(goimports -l ./cmd)" == "" ]; then echo "Good format"; else echo "Bad format"; exit 33; fi);
-
-# test:
-#     tags:
-#     - docker
-#     - linux
-#     image: golang:latest
-#     stage: test        
-#     script:        
-#     - go test -cover -v -coverprofile="./artifacts/cover_cmd.out" ./
-#     - go tool cover -html="./artifacts/cover_cmd.out" -o "./artifacts/cover_cmd.htm"
-#     artifacts:
-#         paths:
-#         - artifacts/*
     
 
 compile-linux:
@@ -83,3 +70,18 @@ compile-windows:
         paths:
         - artifacts/*
 
+compile-darwin:
+    tags:
+    - docker
+    - linux
+    image: golang:latest
+    stage: build
+    variables:
+        GOOS: darwin
+        GOARCH: amd64    
+    script:
+    - mkdir -p artifacts        
+    - go build -o artifacts/jenigma .
+    artifacts:
+        paths:
+        - artifacts/*

@@ -1,4 +1,14 @@
 language: go
 
+install:
+- go get -u github.com/kardianos/govendor
+- govendor sync
+- mkdir -p artifacts
+
 go:
-    - tip
+- tip
+
+script:
+- GOARCH=amd64 GOOS=linux go build -o artifacts/jsonmerge
+- GOARCH=amd64 GOOS=windows go build -o artifacts/jsonmerge.exe
+- GOARCH=amd64 GOOS=darwin go build -o artifacts/jsonmerge_darwin

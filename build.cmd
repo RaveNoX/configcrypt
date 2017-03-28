@@ -16,4 +16,9 @@ set GOOS=windows
 call go build -o artifacts\jenigma.exe
 if not %ERRORLEVEL% == 0 (exit %ERRORLEVEL%)
 
+echo Darwin
+set GOOS=darwin
+call go build -o artifacts\jenigma_darwin
+if not %ERRORLEVEL% == 0 (exit %ERRORLEVEL%)
+
 echo Build done

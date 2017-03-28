@@ -10,5 +10,11 @@ $ go get -u github.com/RaveNoX/jenigma
 $ jenigma -h
 ```
 
+## Development
+```
+go get -u github.com/kardianos/govendor
+govendor sync
+```
+
 ## License
 [MIT](./LICENSE)
