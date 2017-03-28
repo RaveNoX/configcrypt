@@ -24,18 +24,6 @@ cache:
     paths:
     - $GOPATH
     - vendor/**
-
-format:
-    tags:
-    - docker
-    - linux
-    image: golang:latest
-    stage: test   
-    script:    
-    - go get golang.org/x/tools/cmd/goimports 
-    - goimports -l .
-    # If formatted is different than committed, exit with error    
-    - (if [ "$(goimports -l ./cmd)" == "" ]; then echo "Good format"; else echo "Bad format"; exit 33; fi);
     
 
 compile-linux:
