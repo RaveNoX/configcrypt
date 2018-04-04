@@ -1,7 +1,10 @@
+# GoLand
+/.idea/
+
+# vendoring
+/vendor/
+
+# artifacts
 /artifacts/
-
-/vendor/**
-!/vendor/vendor.json
-
 /jenigma.exe
 /jenigma

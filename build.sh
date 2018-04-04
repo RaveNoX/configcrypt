@@ -14,6 +14,6 @@ echo "Windows"
 GOARCH=amd64 GOOS=windows go build -o "artifacts/jenigma.exe"
 
 echo "Darwin"
-GOARCH=amd64 GOOS=darwin go build -o "artifacts/jenigma"
+GOARCH=amd64 GOOS=darwin go build -o "artifacts/jenigma_darwin"
 
 echo "Build done"
