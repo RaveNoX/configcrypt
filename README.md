@@ -13,8 +13,11 @@ $ jenigma -h
 
 ## Development
 ```
-go get -u github.com/kardianos/govendor
-govendor sync
+# Install depencencies
+./init.sh
+
+# Build
+./build.sh
 ```
 
 ## License
